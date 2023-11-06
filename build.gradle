@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id "io.freefair.lombok" version "8.4"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    implementation 'com.github.juanmanuellosada:sportyfy-core:451fb500d3'
+}
+
+test {
+    useJUnitPlatform()
+}
