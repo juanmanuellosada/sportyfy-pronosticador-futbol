@@ -2,10 +2,17 @@ package sportyfy.pronosticador.futbol;
 
 import lombok.Data;
 import sportyfy.core.entidades.Pronosticador;
+import sportyfy.core.entidades.equipo.Equipo;
 import sportyfy.core.entidades.partido.Partido;
+import sportyfy.core.entidades.resultado.Resultado;
+import sportyfy.core.servicios.factorys.ResultadoPartidoFactory;
+import sportyfy.core.servicios.parser.EquiposParser;
 
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Clase `PronosticadorFutbol` que implementa la interfaz `Pronosticador`.
@@ -14,30 +21,43 @@ import java.util.Set;
  */
 @Data
 public class PronosticadorFutbol implements Pronosticador {
-    private Set<Partido> partidos;
+
+    private Map<Partido, Resultado> partidos;
+    private final Logger logger = Logger.getLogger(PronosticadorFutbol.class.getName());
 
     @Override
-    public void setPartidos(Set<Partido> partidos) {
-        this.partidos = partidos;
+    public void iniciar() {
+        try {
+            Set<Equipo> equipos = new EquiposParser().crearEquiposDesdeArchivos("src/main/resources/datos/partidos");
+            partidos = ResultadoPartidoFactory.crearPartidosResultado("src/main/resources/datos/partidos",
+                    new ObjectMapper(), equipos);
+        } catch (IOException e) {
+            logger.severe("Error al leer los archivos de partidos");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void pronosticar(Partido partido) {
-        ValidadorDatos.validar(partido.getLocal(), partido.getVisitante(), partidos);
-
-        double promedioGolesLocal = CalculadoraPromedioGoles.calcular(partido.getLocal(), partidos);
-        double promedioGolesVisitante = CalculadoraPromedioGoles.calcular(partido.getVisitante(), partidos);
-
-        int golesLocal = (int) (promedioGolesLocal + Math.random() * 2);
-        int golesVisitante = (int) (promedioGolesVisitante + Math.random() * 2);
-
-        partido.setMarcadorLocal(golesLocal);
-        partido.setMarcadorVisitante(golesVisitante);
+    public Resultado pronosticar(Partido partido) {
+        return new Resultado(new LinkedHashMap<>(Map.of(
+                partido.getLocal(),
+                (int) Math.round(CalculadoraPromedioGoles.calcularPromedioGoles(partido.getLocal(), partidos)),
+                partido.getVisitante(),
+                (int) Math.round(CalculadoraPromedioGoles.calcularPromedioGoles(partido.getVisitante(), partidos)))));
     }
 
     @Override
     public String getDeporte() {
-        return "Futbol";
+        return "Fútbol";
     }
 
+    @Override
+    public Set<Equipo> getEquipos() {
+        Set<Equipo> equipos = new HashSet<>();
+        for (Partido partido : partidos.keySet()) {
+            equipos.add(partido.getLocal());
+            equipos.add(partido.getVisitante());
+        }
+        return equipos;
+    }
 }
