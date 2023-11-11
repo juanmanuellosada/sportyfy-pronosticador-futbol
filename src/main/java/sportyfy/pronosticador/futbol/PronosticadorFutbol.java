@@ -25,11 +25,6 @@ public class PronosticadorFutbol implements Pronosticador {
     private Map<Partido, Resultado> partidos;
     private final Logger logger = Logger.getLogger(PronosticadorFutbol.class.getName());
 
-    /**
-     * Constructor de la clase `PronosticadorFutbol`.
-     * Inicializa la lista de partidos a partir de los archivos de datos
-     * de partidos.
-     */
     @Override
     public void iniciar() {
         try {
