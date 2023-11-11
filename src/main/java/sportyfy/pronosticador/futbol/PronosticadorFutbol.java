@@ -30,10 +30,6 @@ public class PronosticadorFutbol implements Pronosticador {
      * Inicializa la lista de partidos a partir de los archivos de datos
      * de partidos.
      */
-    public PronosticadorFutbol() {
-        iniciar();
-    }
-
     @Override
     public void iniciar() {
         try {
