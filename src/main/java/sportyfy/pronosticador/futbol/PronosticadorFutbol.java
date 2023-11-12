@@ -28,9 +28,8 @@ public class PronosticadorFutbol implements Pronosticador {
     @Override
     public void iniciar(String rutacCarpetaPartidos) {
         try {
-            Set<Equipo> equipos = new EquiposParser().crearEquiposDesdeArchivos(rutacCarpetaPartidos);
             partidos = ResultadoPartidoFactory.crearPartidosResultado(rutacCarpetaPartidos,
-                    new ObjectMapper(), equipos);
+                    new ObjectMapper());
         } catch (IOException e) {
             logger.severe("Error al leer los archivos de partidos");
             throw new RuntimeException(e);
