@@ -26,10 +26,10 @@ public class PronosticadorFutbol implements Pronosticador {
     private final Logger logger = Logger.getLogger(PronosticadorFutbol.class.getName());
 
     @Override
-    public void iniciar() {
+    public void iniciar(String rutacCarpetaPartidos) {
         try {
-            Set<Equipo> equipos = new EquiposParser().crearEquiposDesdeArchivos("src/main/resources/datos/partidos");
-            partidos = ResultadoPartidoFactory.crearPartidosResultado("src/main/resources/datos/partidos",
+            Set<Equipo> equipos = new EquiposParser().crearEquiposDesdeArchivos(rutacCarpetaPartidos);
+            partidos = ResultadoPartidoFactory.crearPartidosResultado(rutacCarpetaPartidos,
                     new ObjectMapper(), equipos);
         } catch (IOException e) {
             logger.severe("Error al leer los archivos de partidos");
