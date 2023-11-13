@@ -26,13 +26,8 @@ public class PronosticadorFutbol implements Pronosticador {
 
     @Override
     public void iniciar(String rutacCarpetaPartidos) {
-        try {
-            partidos = ResultadoPartidoFactory.crearPartidosResultado(rutacCarpetaPartidos,
-                    new ObjectMapper());
-        } catch (IOException e) {
-            logger.severe("Error al leer los archivos de partidos");
-            throw new RuntimeException(e);
-        }
+        partidos = ResultadoPartidoFactory.crearPartidosResultado(rutacCarpetaPartidos,
+                new ObjectMapper());
     }
 
     @Override
